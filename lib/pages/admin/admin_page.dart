@@ -2,16 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:nazorat_varaqasi/pages/admin/add_card_page.dart';
 import 'package:nazorat_varaqasi/pages/admin/dashboard/dashboard.dart';
 import 'package:nazorat_varaqasi/style/app_colors.dart';
+import 'package:nazorat_varaqasi/style/app_style.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Future<void> _logout(BuildContext context) async {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    }
+
     return Scaffold(
         backgroundColor: AppColors.backgroundColor,
         appBar: AppBar(
-          title: const Text('Админская панель'),
+          title: Text(
+            'Admin paneli',
+            style: AppStyle.fontStyle
+                .copyWith(fontWeight: FontWeight.bold, fontSize: 20),
+          ),
           backgroundColor: Colors.red,
           actions: [
             IconButton(
@@ -21,8 +33,22 @@ class AdminScreen extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const AddCardPage()),
                 );
               },
-              icon: const Icon(Icons.add),
-              tooltip: 'Добавить карточку',
+              icon: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+              tooltip: 'Nazorat varaqasi qo\'shish',
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            IconButton(
+              onPressed: () => _logout(context),
+              icon: const Icon(
+                Icons.logout,
+                color: Colors.white,
+              ),
+              tooltip: 'Выйти',
             ),
           ],
         ),

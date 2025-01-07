@@ -18,23 +18,22 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    _loadSavedCredentials();
+    _checkAutoLogin();
   }
 
-  // Загрузка сохранённых логина и пароля
-  Future<void> _loadSavedCredentials() async {
+  /// Проверка и выполнение автологина
+  Future<void> _checkAutoLogin() async {
     final prefs = await SharedPreferences.getInstance();
     final savedUsername = prefs.getString('username');
     final savedPassword = prefs.getString('password');
 
     if (savedUsername != null && savedPassword != null) {
-      emailController.text = savedUsername;
-      passwordController.text = savedPassword;
+      // Попытка автологина
       _autoLogin(savedUsername, savedPassword);
     }
   }
 
-  // Автоматический вход
+  /// Автоматический вход
   Future<void> _autoLogin(String username, String password) async {
     try {
       final conn = await Connection.open(
@@ -49,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       final result = await conn.execute(
         Sql.named(
-          'SELECT * FROM public.users WHERE username=@username AND password=@password',
+          'SELECT id, username FROM public.users WHERE username=@username AND password=@password',
         ),
         parameters: {
           'username': username,
@@ -58,10 +57,19 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (result.isNotEmpty) {
-        print('Автоматический вход успешен!');
-        Navigator.pushNamed(context, '/home');
+        final userId = result.first.toColumnMap()['id'].toString();
+        final fetchedUsername = result.first.toColumnMap()['username'];
+
+        // Сохраняем данные в `SharedPreferences`, если успешно
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userId', userId);
+        await prefs.setString('username', fetchedUsername);
+        await prefs.setString('password', password);
+
+        print('Автологин успешен: ID пользователя - $userId');
+        Navigator.pushNamed(context, '/home'); // Переход на следующий экран
       } else {
-        print('Неверные учётные данные при автологине.');
+        print('Неверные данные при автологине.');
       }
 
       await conn.close();
@@ -70,14 +78,14 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // Переключение видимости пароля
+  /// Переключение видимости пароля
   void togglePasswordView() {
     setState(() {
       isHiddenPassword = !isHiddenPassword;
     });
   }
 
-  // Метод входа
+  /// Метод входа
   Future<void> login() async {
     final isValid = formKey.currentState!.validate();
     if (!isValid) return;
@@ -106,6 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (result.isNotEmpty) {
         final userId = result.first.toColumnMap()['id'].toString();
         final username = result.first.toColumnMap()['username'];
+        final password = passwordController.text.trim();
 
         print('Логин успешен! ID пользователя: $userId');
 
@@ -113,6 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('userId', userId);
         await prefs.setString('username', username);
+        await prefs.setString('password', password);
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
