@@ -5,7 +5,7 @@ import 'package:nazorat_varaqasi/style/app_colors.dart';
 abstract class AppStyle {
   static const fontStyle = TextStyle(
     fontSize: 15,
-    color: AppColors.textColor,
+    color: AppColors.headerColor,
     fontFamily: 'Poppins',
   );
 }

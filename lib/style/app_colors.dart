@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 
 abstract class AppColors {
-  static const backgroundColor = Color.fromARGB(255, 255, 255, 255);
+  static const backgroundColor = Color(0xFF1F1F1F);
+  static var foregroundColor = Colors.grey[800];
   static const headerColor = Color.fromARGB(255, 255, 255, 255);
   static const textColor = Colors.black;
   static const dividerColor = Color.fromARGB(255, 131, 131, 131);

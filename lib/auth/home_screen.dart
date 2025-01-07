@@ -56,16 +56,17 @@ class _HomeScreenState extends State<HomeScreen> {
       if (result.isNotEmpty) {
         final roleId = result.first.toColumnMap()['role_id'] as int?;
 
-        // Перенаправление в зависимости от роли
         if (roleId == 1) {
-          Navigator.pushReplacement(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const AdminScreen()),
+            (route) => false,
           );
         } else if (roleId == 2) {
-          Navigator.pushReplacement(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const UserScreen()),
+            (route) => false,
           );
         } else {
           throw Exception('Неизвестная роль: $roleId');

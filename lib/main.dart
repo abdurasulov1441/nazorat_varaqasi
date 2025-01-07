@@ -15,7 +15,7 @@ Future<void> main() async {
     appWindow.maxSize = initialSize; // Устанавливаем максимальный размер окна
     appWindow.size = initialSize; // Устанавливаем стартовый размер окна
     appWindow.alignment = Alignment.center; // Центрируем окно
-    appWindow.title = "My Fixed Size App"; // Название окна
+    appWindow.title = "Nazorat varaqasi"; // Название окна
     appWindow.show(); // Показываем окно
   });
 }

@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:nazorat_varaqasi/pages/user/card_widgets.dart';
+import 'package:nazorat_varaqasi/pages/user/grafik.dart';
+import 'package:nazorat_varaqasi/style/app_colors.dart';
 import 'package:postgres/postgres.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:windows_notification/notification_message.dart';
 import 'package:windows_notification/windows_notification.dart';
 
@@ -15,46 +16,46 @@ class UserScreen extends StatefulWidget {
 }
 
 class _UserScreenState extends State<UserScreen> {
+  Timer? _timer;
   String? _userId;
-  List<Map<String, dynamic>> _userCards = [];
-  int totalCards = 0;
-  int activeCards = 0;
-  int completedCards = 0;
-  Timer? _pollingTimer;
-  Timer? _hourlyNotificationTimer;
+  String? _userFullName;
 
   @override
   void initState() {
     super.initState();
-    _loadUserId();
-    _startPolling();
-    _startHourlyNotifications();
+    _loadUserIdAndStartListening();
+    _loadUserIdAndUserInfo();
   }
 
   @override
   void dispose() {
-    _pollingTimer?.cancel();
-    _hourlyNotificationTimer?.cancel();
+    _timer?.cancel();
     super.dispose();
   }
 
-  Future<void> _loadUserId() async {
+  Future<void> _logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
-    final savedUserId = prefs.getString('userId');
-
-    if (savedUserId == null) {
-      Navigator.pushReplacementNamed(context, '/login');
-      return;
-    }
-
-    setState(() {
-      _userId = savedUserId;
-    });
-
-    _fetchUserCards();
+    await prefs.clear();
+    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
   }
 
-  Future<void> _fetchUserCards() async {
+  Future<void> _loadUserIdAndStartListening() async {
+    final prefs = await SharedPreferences.getInstance();
+    _userId = prefs.getString('userId');
+    if (_userId != null) {
+      _startListening();
+    } else {
+      print("Ошибка: ID пользователя не найден.");
+    }
+  }
+
+  void _startListening() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _checkForNewCards();
+    });
+  }
+
+  Future<void> _checkForNewCards() async {
     if (_userId == null) return;
 
     try {
@@ -69,34 +70,106 @@ class _UserScreenState extends State<UserScreen> {
       );
 
       final result = await conn.execute(
-        Sql.named('SELECT * FROM public.control_cards WHERE user_id=@user_id'),
-        parameters: {'user_id': int.parse(_userId!)},
+        Sql.named(
+          'SELECT * FROM public.control_cards WHERE user_id = @user_id AND status_id = 1 ORDER BY id ASC',
+        ),
+        parameters: {
+          'user_id': int.parse(_userId!),
+        },
       );
 
-      final allCards = result.map((row) => row.toColumnMap()).toList();
+      final newCards = result.map((row) => row.toColumnMap()).toList();
 
-      for (final card in allCards.where((card) => card['status_id'] == 1)) {
-        _showNotification(card);
-        await _markAsRead(card['id']);
+      for (final card in newCards) {
+        final remainingDays = _calculateRemainingDays(card['end_date']);
+        final notificationBody =
+            "Nazorat varaqasi № ${(card['card_number'])}\n$remainingDays\nBoshlanish sanasi: ${_formatDate(card['start_date'])}\nTugash muddati: ${_formatDate(card['end_date'])}\nTavsif: ${card['description']}";
+
+        await _showWindowsNotification(
+          "Yangi karta №${card['card_number']}",
+          notificationBody,
+        );
+
+        await conn.execute(
+          Sql.named(
+            'UPDATE public.control_cards SET status_id = 2 WHERE id = @id',
+          ),
+          parameters: {
+            'id': card['id'],
+          },
+        );
       }
-
-      setState(() {
-        _userCards = allCards;
-        totalCards = allCards.length;
-        activeCards = allCards
-            .where((card) => card['status_id'] == 1 || card['status_id'] == 2)
-            .length;
-        completedCards =
-            allCards.where((card) => card['status_id'] == 3).length;
-      });
 
       await conn.close();
     } catch (e) {
-      print('Ошибка при получении данных пользователя: $e');
+      print('Ошибка при проверке новых карточек: $e');
     }
   }
 
-  Future<void> _markAsRead(int cardId) async {
+  Future<void> _showWindowsNotification(String title, String body) async {
+    final notification = NotificationMessage.fromPluginTemplate(
+      title,
+      body,
+      '',
+    );
+
+    final windowsNotification = WindowsNotification(
+      applicationId: r'Nazorat varaqasi',
+    );
+
+    await windowsNotification.showNotificationPluginTemplate(notification);
+  }
+
+  String _formatDate(dynamic date) {
+    if (date is DateTime) {
+      return "${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}";
+    } else if (date is String) {
+      return _formatDate(DateTime.parse(date));
+    } else if (date is List) {
+      List<DateTime> dates =
+          date.map((d) => DateTime.parse(d.toString())).toList();
+      dates.sort();
+      return dates.isNotEmpty
+          ? "${dates.first.day.toString().padLeft(2, '0')}.${dates.first.month.toString().padLeft(2, '0')}.${dates.first.year}"
+          : "Noma'lum sana";
+    }
+    return "Noma'lum sana";
+  }
+
+  String _calculateRemainingDays(dynamic date) {
+    if (date is DateTime) {
+      final now = DateTime.now();
+      final difference = date.difference(now).inDays;
+      return difference > 0
+          ? "$difference kun qoldi"
+          : difference == 0
+              ? "Bugun"
+              : "Muddati o'tgan";
+    } else if (date is String) {
+      return _calculateRemainingDays(DateTime.parse(date));
+    } else if (date is List) {
+      List<DateTime> dates =
+          date.map((d) => DateTime.parse(d.toString())).toList();
+      dates.sort();
+      return dates.isNotEmpty
+          ? _calculateRemainingDays(dates.first)
+          : "Noma'lum muddat";
+    }
+    return "Noma'lum muddat";
+  }
+
+  Future<void> _loadUserIdAndUserInfo() async {
+    final prefs = await SharedPreferences.getInstance();
+    _userId = prefs.getString('userId');
+    if (_userId != null) {
+      await _fetchUserFullName();
+      _startListening();
+    } else {
+      print("Ошибка: ID пользователя не найден.");
+    }
+  }
+
+  Future<void> _fetchUserFullName() async {
     try {
       final conn = await Connection.open(
         Endpoint(
@@ -108,202 +181,54 @@ class _UserScreenState extends State<UserScreen> {
         settings: ConnectionSettings(sslMode: SslMode.disable),
       );
 
-      await conn.execute(
+      final result = await conn.execute(
         Sql.named(
-          'UPDATE public.control_cards SET status_id = 2 WHERE id=@card_id',
+          'SELECT firstname, lastname FROM public.users WHERE id = @id',
         ),
-        parameters: {'card_id': cardId},
+        parameters: {
+          'id': int.parse(_userId!),
+        },
       );
+
+      if (result.isNotEmpty) {
+        final row = result.first.toColumnMap();
+        setState(() {
+          _userFullName = "${row['firstname']} ${row['lastname']}";
+        });
+      }
 
       await conn.close();
     } catch (e) {
-      print('Ошибка при обновлении статуса: $e');
+      print('Ошибка при загрузке имени и фамилии пользователя: $e');
     }
-  }
-
-  void _showNotification(Map<String, dynamic> card) {
-    final message = NotificationMessage.fromPluginTemplate(
-      "Control Card Notification",
-      "Новая карточка: ${card['card_number']}",
-      '''
-Описание: ${card['description']}
-Дата окончания: ${_getNextEndDate(card['end_date'])}
-Уровень задачи: ${card['task_level_id'] ?? 'Не указан'}
-''',
-      payload: {
-        "action": "open_card",
-        "card_id": card['id'],
-      },
-    );
-
-    WindowsNotification(applicationId: r"{YourAppID}")
-        .showNotificationPluginTemplate(message);
-  }
-
-  void _startPolling() {
-    _pollingTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
-      _fetchUserCards();
-    });
-  }
-
-  void _startHourlyNotifications() {
-    _hourlyNotificationTimer =
-        Timer.periodic(const Duration(hours: 1), (timer) {
-      for (final card in _userCards) {
-        _showNotification(card);
-      }
-    });
-  }
-
-  String _getNextEndDate(dynamic endDates) {
-    if (endDates is String) {
-      // Если только одна дата, вернуть её
-      return _formatDate(DateTime.parse(endDates));
-    } else if (endDates is List) {
-      // Если список дат, найти ближайшую
-      List<DateTime> dates = endDates
-          .map((date) => DateTime.parse(date.toString()))
-          .where((date) => date.isAfter(DateTime.now()))
-          .toList();
-      dates.sort();
-      if (dates.isNotEmpty) {
-        return _formatDate(dates.first);
-      }
-    }
-    return "Не указано";
-  }
-
-// Форматирование даты
-  String _formatDate(DateTime date) {
-    return "${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}";
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_userId == null) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back),
-        ),
-        title: const Text('Панель пользователя'),
+        actions: [
+          IconButton(
+            onPressed: () => _logout(context),
+            icon: const Icon(Icons.logout),
+            tooltip: 'Выйти',
+          ),
+        ],
+        title: Text(_userFullName ?? 'Загрузка...'),
         backgroundColor: Colors.green,
       ),
       body: Row(
-        children: [
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
           SizedBox(
             width: 300,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Card(
-                elevation: 5,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Статистика задач',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        height: 200,
-                        child: PieChart(
-                          PieChartData(
-                            sections: [
-                              PieChartSectionData(
-                                value: totalCards.toDouble(),
-                                title: 'Всего: $totalCards',
-                                color: Colors.blue,
-                              ),
-                              PieChartSectionData(
-                                value: activeCards.toDouble(),
-                                title: 'Активные: $activeCards',
-                                color: Colors.orange,
-                              ),
-                              PieChartSectionData(
-                                value: completedCards.toDouble(),
-                                title: 'Завершенные: $completedCards',
-                                color: Colors.green,
-                              ),
-                            ],
-                            sectionsSpace: 2,
-                            centerSpaceRadius: 40,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            child: GraphWidget(),
           ),
           Expanded(
-            child: _userCards.isEmpty
-                ? const Center(
-                    child: Text(
-                      'Нет данных для отображения.',
-                      style: TextStyle(fontSize: 18, color: Colors.grey),
-                    ),
-                  )
-                : GridView.builder(
-                    padding: const EdgeInsets.all(16.0),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 16.0,
-                      mainAxisSpacing: 16.0,
-                      childAspectRatio: 3 / 2,
-                    ),
-                    itemCount: _userCards.length,
-                    itemBuilder: (context, index) {
-                      final card = _userCards[index];
-                      final cardColor = card['task_level_id'] == 1
-                          ? Colors.red[100]
-                          : Colors.white;
-                      return Card(
-                        color: cardColor,
-                        elevation: 5,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Карточка: ${card['card_number']}',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text('Описание: ${card['description']}'),
-                              Text(
-                                'Дата окончания: ${_getNextEndDate(card['end_date'])}',
-                              ),
-                              Text(
-                                'Уровень задачи: ${card['task_level_id'] ?? 'Не указан'}',
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+            flex: 1,
+            child: CardsWidget(),
           ),
         ],
       ),
