@@ -17,6 +17,7 @@ class AdminScreen extends StatelessWidget {
     }
 
     return Scaffold(
+        // floatingActionButton: FloatingActionButton(onPressed: () {}),
         backgroundColor: AppColors.backgroundColor,
         appBar: AppBar(
           title: Text(

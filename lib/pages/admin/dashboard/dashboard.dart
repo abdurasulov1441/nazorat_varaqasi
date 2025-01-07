@@ -196,49 +196,6 @@ class _DashboardPageState extends State<DashboardPage> {
     final filteredTasks = _getFilteredTasks();
     return Column(
       children: [
-        // Фильтры
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _filterStatus == "inProgress"
-                      ? Colors.blue
-                      : AppColors.foregroundColor,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _filterStatus = "inProgress";
-                  });
-                },
-                child: const Text(
-                  "Jarayonda",
-                  style: AppStyle.fontStyle,
-                ),
-              ),
-              const SizedBox(width: 16),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _filterStatus == "completed"
-                      ? Colors.blue
-                      : AppColors.foregroundColor,
-                ),
-                onPressed: () {
-                  setState(() {
-                    _filterStatus = "completed";
-                  });
-                },
-                child: const Text(
-                  "Yakunlangan",
-                  style: AppStyle.fontStyle,
-                ),
-              ),
-            ],
-          ),
-        ),
-
         Expanded(
           child: Row(
             children: [
@@ -290,15 +247,117 @@ class _DashboardPageState extends State<DashboardPage> {
                           ),
                         )
                       : filteredTasks.isEmpty
-                          ? const Center(
-                              child: Text(
-                                'У выбранного пользователя нет задач.',
-                                style:
-                                    TextStyle(fontSize: 16, color: Colors.grey),
-                              ),
+                          ? Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          backgroundColor:
+                                              _filterStatus == "inProgress"
+                                                  ? Colors.blue
+                                                  : AppColors.backgroundColor,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            _filterStatus = "inProgress";
+                                          });
+                                        },
+                                        child: const Text(
+                                          "Jarayonda",
+                                          style: AppStyle.fontStyle,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          backgroundColor:
+                                              _filterStatus == "completed"
+                                                  ? Colors.blue
+                                                  : AppColors.backgroundColor,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            _filterStatus = "completed";
+                                          });
+                                        },
+                                        child: const Text(
+                                          "Yakunlangan",
+                                          style: AppStyle.fontStyle,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const Center(
+                                  child: Text(
+                                    'У выбранного пользователя нет задач.',
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.grey),
+                                  ),
+                                ),
+                              ],
                             )
                           : Column(
                               children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          backgroundColor:
+                                              _filterStatus == "inProgress"
+                                                  ? Colors.blue
+                                                  : AppColors.backgroundColor,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            _filterStatus = "inProgress";
+                                          });
+                                        },
+                                        child: const Text(
+                                          "Jarayonda",
+                                          style: AppStyle.fontStyle,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 16),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10)),
+                                          backgroundColor:
+                                              _filterStatus == "completed"
+                                                  ? Colors.blue
+                                                  : AppColors.backgroundColor,
+                                        ),
+                                        onPressed: () {
+                                          setState(() {
+                                            _filterStatus = "completed";
+                                          });
+                                        },
+                                        child: const Text(
+                                          "Yakunlangan",
+                                          style: AppStyle.fontStyle,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 SingleChildScrollView(
                                   padding: const EdgeInsets.all(16),
                                   child: Wrap(
