@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nazorat_varaqasi/pages/admin/add_card_page.dart';
+import 'package:nazorat_varaqasi/pages/admin/calendar_page/calendar_page.dart';
 import 'package:nazorat_varaqasi/pages/admin/dashboard/dashboard.dart';
 import 'package:nazorat_varaqasi/style/app_colors.dart';
 import 'package:nazorat_varaqasi/style/app_style.dart';
@@ -28,6 +29,23 @@ class AdminScreen extends StatelessWidget {
           ),
           backgroundColor: Colors.red,
           actions: [
+            IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AdminCalendarPage()),
+                );
+              },
+              icon: const Icon(
+                Icons.calendar_month,
+                color: Colors.white,
+              ),
+              tooltip: 'Kalendarda ko\'rish',
+            ),
+            SizedBox(
+              width: 20,
+            ),
             IconButton(
               onPressed: () {
                 Navigator.push(

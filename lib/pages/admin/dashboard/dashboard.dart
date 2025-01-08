@@ -15,6 +15,7 @@ class _DashboardPageState extends State<DashboardPage> {
   List<Map<String, dynamic>> _userTasks = [];
   int? _selectedUserId;
   String _filterStatus = "inProgress";
+
   @override
   void initState() {
     super.initState();
@@ -358,150 +359,141 @@ class _DashboardPageState extends State<DashboardPage> {
                                     ],
                                   ),
                                 ),
-                                SingleChildScrollView(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Wrap(
-                                    spacing: 16,
-                                    runSpacing: 16,
-                                    children: filteredTasks.map((task) {
-                                      final isOverdue = task['status_id'] == 4;
-                                      final isNearDeadline =
-                                          task['status_id'] == 5;
-                                      return Container(
-                                        width: 450,
-                                        decoration: BoxDecoration(
-                                          color: AppColors.backgroundColor,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.black.withOpacity(0.1),
-                                              blurRadius: 4,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ],
-                                        ),
-                                        padding: const EdgeInsets.all(16),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.all(5),
-                                                  decoration: BoxDecoration(
-                                                    color: isOverdue
-                                                        ? Colors.red
-                                                        : isNearDeadline
-                                                            ? Colors.orange
-                                                            : Colors.green,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                  ),
-                                                  child: Text(
-                                                    'Nazorat varaqasi №${task['card_number']}',
-                                                    style: const TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.white),
-                                                  ),
+                                Wrap(
+                                  spacing: 16,
+                                  runSpacing: 16,
+                                  children: filteredTasks.map((task) {
+                                    final isOverdue = task['status_id'] == 4;
+                                    final isNearDeadline =
+                                        task['status_id'] == 5;
+                                    return Container(
+                                      width: 450,
+                                      decoration: BoxDecoration(
+                                        color: AppColors.backgroundColor,
+                                        borderRadius: BorderRadius.circular(8),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.1),
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      padding: const EdgeInsets.all(16),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.all(5),
+                                                decoration: BoxDecoration(
+                                                  color: isOverdue
+                                                      ? Colors.red
+                                                      : isNearDeadline
+                                                          ? Colors.orange
+                                                          : Colors.green,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
                                                 ),
-                                                if (task['task_level_id'] == 1)
-                                                  Text(
-                                                    'QBB',
-                                                    style: AppStyle.fontStyle
-                                                        .copyWith(),
-                                                  ),
-                                                if (task['task_level_id'] == 2)
-                                                  Text(
-                                                    'MG',
-                                                    style: AppStyle.fontStyle
-                                                        .copyWith(),
-                                                  ),
-                                                if (task['task_level_id'] == 3)
-                                                  Text(
-                                                    'DXX',
-                                                    style: AppStyle.fontStyle
-                                                        .copyWith(),
-                                                  ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 10),
-                                            Text(
-                                              'Boshlanish sanasi: ${_formatDate(task['start_date'])}',
-                                              style:
-                                                  AppStyle.fontStyle.copyWith(),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
+                                                child: Text(
+                                                  'Nazorat varaqasi №${task['card_number']}',
+                                                  style: const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                              if (task['task_level_id'] == 1)
                                                 Text(
-                                                  'Tugash muddati: ${_formatDate(task['end_date'])}',
+                                                  'QBB',
                                                   style: AppStyle.fontStyle
                                                       .copyWith(),
                                                 ),
-                                                CircleAvatar(
-                                                  radius: 15,
-                                                  backgroundColor:
-                                                      const Color.fromARGB(
-                                                          255, 93, 204, 255),
-                                                  child: Text(
-                                                    _calculateRemainingDays(
-                                                        task['end_date']),
-                                                    style: AppStyle.fontStyle,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 10),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
+                                              if (task['task_level_id'] == 2)
                                                 Text(
-                                                  'Tavsif: ${task['description']}',
+                                                  'MG',
                                                   style: AppStyle.fontStyle
                                                       .copyWith(),
                                                 ),
-                                                if (task['status_id'] != 3)
-                                                  ElevatedButton(
-                                                      style: ElevatedButton.styleFrom(
-                                                          backgroundColor:
-                                                              AppColors
-                                                                  .foregroundColor,
-                                                          shape: RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          10))),
-                                                      onPressed: () {
-                                                        _updateTaskStatus(
-                                                            task['id']);
-                                                      },
-                                                      child: Text(
-                                                        'Yakunlash',
-                                                        style:
-                                                            AppStyle.fontStyle,
-                                                      ))
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ),
+                                              if (task['task_level_id'] == 3)
+                                                Text(
+                                                  'DXX',
+                                                  style: AppStyle.fontStyle
+                                                      .copyWith(),
+                                                ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Text(
+                                            'Boshlanish sanasi: ${_formatDate(task['start_date'])}',
+                                            style:
+                                                AppStyle.fontStyle.copyWith(),
+                                          ),
+                                          const SizedBox(height: 8),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Tugash muddati: ${_formatDate(task['end_date'])}',
+                                                style: AppStyle.fontStyle
+                                                    .copyWith(),
+                                              ),
+                                              CircleAvatar(
+                                                radius: 15,
+                                                backgroundColor:
+                                                    const Color.fromARGB(
+                                                        255, 93, 204, 255),
+                                                child: Text(
+                                                  _calculateRemainingDays(
+                                                      task['end_date']),
+                                                  style: AppStyle.fontStyle,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 10),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Tavsif: ${task['description']}',
+                                                style: AppStyle.fontStyle
+                                                    .copyWith(),
+                                              ),
+                                              if (task['status_id'] != 3)
+                                                ElevatedButton(
+                                                    style: ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                            AppColors
+                                                                .foregroundColor,
+                                                        shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10))),
+                                                    onPressed: () {
+                                                      _updateTaskStatus(
+                                                          task['id']);
+                                                    },
+                                                    child: Text(
+                                                      'Yakunlash',
+                                                      style: AppStyle.fontStyle,
+                                                    ))
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
                               ],
                             ),
