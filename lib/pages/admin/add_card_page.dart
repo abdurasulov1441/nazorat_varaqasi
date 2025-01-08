@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
+import 'package:nazorat_varaqasi/style/app_colors.dart';
+import 'package:nazorat_varaqasi/style/app_style.dart';
 import 'package:postgres/postgres.dart';
 
 class AddCardPage extends StatelessWidget {
@@ -7,9 +10,22 @@ class AddCardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
-        title: const Text('Добавить карточку'),
-        backgroundColor: Colors.red,
+        centerTitle: true,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              color: AppColors.headerColor,
+            )),
+        title: Text(
+          'Nazorat varqasi qo\'shish',
+          style: AppStyle.fontStyle.copyWith(fontSize: 20),
+        ),
+        backgroundColor: Colors.green,
       ),
       body: const AddCardForm(),
     );
@@ -177,136 +193,198 @@ class _AddCardFormState extends State<AddCardForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Form(
-        key: _formKey,
-        child: ListView(
-          children: [
-            const Text(
-              'Выберите сотрудника',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            DropdownButtonFormField<String>(
-              items: _users
-                  .map(
-                    (user) => DropdownMenuItem(
-                      value: user['id'].toString(),
-                      child: Text('${user['firstname']} ${user['lastname']}'),
+    return Row(
+      children: [
+        LottieBuilder.asset('assets/lotties/add_info.json'),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: ListView(
+                children: [
+                  Text('Xodimni tanlang', style: AppStyle.fontStyle),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<String>(
+                    dropdownColor: AppColors.foregroundColor,
+                    borderRadius: BorderRadius.circular(10),
+                    items: _users
+                        .map(
+                          (user) => DropdownMenuItem(
+                            value: user['id'].toString(),
+                            child: Text(
+                              '${user['firstname']} ${user['lastname']}',
+                              style: AppStyle.fontStyle,
+                            ),
+                          ),
+                        )
+                        .toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedUserId = value;
+                      });
+                    },
+                    validator: (value) =>
+                        value == null ? 'Xodimni tanlang' : null,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: AppColors.foregroundColor,
+                      border: OutlineInputBorder(),
                     ),
-                  )
-                  .toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedUserId = value;
-                });
-              },
-              validator: (value) =>
-                  value == null ? 'Выберите сотрудника' : null,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    style: AppStyle.fontStyle,
+                    controller: _cardNumberController,
+                    decoration: InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColors.headerColor)),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(10)),
+                      filled: true,
+                      fillColor: AppColors.foregroundColor,
+                      labelText: 'Nazorat varaqasi raqami',
+                      labelStyle: AppStyle.fontStyle,
+                      border: const OutlineInputBorder(),
+                    ),
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Nazorat varaqasi raqamini kiriting'
+                        : null,
+                  ),
+                  const SizedBox(height: 16),
+                  ListTile(
+                    iconColor: AppColors.headerColor,
+                    shape: RoundedRectangleBorder(
+                        side: BorderSide(color: AppColors.headerColor),
+                        borderRadius: BorderRadius.circular(10)),
+                    title: const Text(
+                      'Ijro boshlanish vaqti',
+                      style: AppStyle.fontStyle,
+                    ),
+                    subtitle: Text(
+                        _startDate == null
+                            ? 'Sanasini tanlang'
+                            : _startDate.toString().split(' ')[0],
+                        style: AppStyle.fontStyle),
+                    trailing: const Icon(Icons.calendar_today),
+                    onTap: () => _selectStartDate(context),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Tugash vaqti',
+                    style: AppStyle.fontStyle,
+                  ),
+                  const SizedBox(height: 8),
+                  Column(
+                    children: _endDates
+                        .map((date) => ListTile(
+                              title: Text(date.toString().split(' ')[0],
+                                  style: AppStyle.fontStyle),
+                              trailing: IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  color: AppColors.headerColor,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _endDates.remove(date);
+                                  });
+                                },
+                              ),
+                            ))
+                        .toList(),
+                  ),
+                  SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.foregroundColor,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10))),
+                      onPressed: () => _addEndDate(context),
+                      child: const Text(
+                        'Ijro muddati tugash vaqti',
+                        style: AppStyle.fontStyle,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    style: AppStyle.fontStyle,
+                    controller: _descriptionController,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: AppColors.foregroundColor,
+                      labelText: 'Tasnif',
+                      labelStyle: AppStyle.fontStyle,
+                      border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                    ),
+                    validator: (value) => value == null || value.isEmpty
+                        ? 'Tasnif kiriting'
+                        : null,
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Nazorat varaqasi qayerniki?',
+                    style: AppStyle.fontStyle,
+                  ),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<String>(
+                    dropdownColor: AppColors.foregroundColor,
+                    items: const [
+                      DropdownMenuItem(
+                          value: "1",
+                          child: Text(
+                            'QBB',
+                            style: AppStyle.fontStyle,
+                          )),
+                      DropdownMenuItem(
+                          value: "2",
+                          child: Text(
+                            'MG',
+                            style: AppStyle.fontStyle,
+                          )),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        _taskLevel = value;
+                      });
+                    },
+                    validator: (value) =>
+                        value == null ? 'Nazorat varaqasi qayerniki?' : null,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: AppColors.foregroundColor,
+                      border: const OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          backgroundColor: AppColors.foregroundColor),
+                      onPressed: _addControlCard,
+                      child: const Text(
+                        'Nazorat varaqasini qo\'shish',
+                        style: AppStyle.fontStyle,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 16),
-
-            // Поле для номера карточки
-            TextFormField(
-              controller: _cardNumberController,
-              decoration: const InputDecoration(
-                labelText: 'Номер карточки',
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) => value == null || value.isEmpty
-                  ? 'Введите номер карточки'
-                  : null,
-            ),
-            const SizedBox(height: 16),
-
-            // Дата начала
-            ListTile(
-              title: const Text('Дата начала'),
-              subtitle: Text(
-                _startDate == null
-                    ? 'Выберите дату'
-                    : _startDate.toString().split(' ')[0],
-              ),
-              trailing: const Icon(Icons.calendar_today),
-              onTap: () => _selectStartDate(context),
-            ),
-            const SizedBox(height: 16),
-
-            // Даты окончания
-            const Text(
-              'Даты окончания',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Column(
-              children: _endDates
-                  .map((date) => ListTile(
-                        title: Text(date.toString().split(' ')[0]),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            setState(() {
-                              _endDates.remove(date);
-                            });
-                          },
-                        ),
-                      ))
-                  .toList(),
-            ),
-            ElevatedButton(
-              onPressed: () => _addEndDate(context),
-              child: const Text('Добавить дату окончания'),
-            ),
-            const SizedBox(height: 16),
-
-            // Поле для описания
-            TextFormField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Описание',
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) =>
-                  value == null || value.isEmpty ? 'Введите описание' : null,
-            ),
-            const SizedBox(height: 16),
-
-            // Уровень задачи
-            const Text(
-              'Уровень задачи',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            DropdownButtonFormField<String>(
-              items: const [
-                DropdownMenuItem(value: "1", child: Text('QBB')),
-                DropdownMenuItem(value: "2", child: Text('MG')),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _taskLevel = value;
-                });
-              },
-              validator: (value) =>
-                  value == null ? 'Выберите уровень задачи' : null,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Кнопка добавления
-            ElevatedButton(
-              onPressed: _addControlCard,
-              child: const Text('Добавить карточку'),
-            ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

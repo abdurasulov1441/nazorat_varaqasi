@@ -220,7 +220,7 @@ class _CardsWidgetState extends State<CardsWidget> {
                                   const Color.fromARGB(255, 93, 204, 255),
                               radius: 20,
                               child: Text(
-                                '${_calculateRemainingDays(card['end_date'])}',
+                                _calculateRemainingDays(card['end_date']),
                                 style: AppStyle.fontStyle,
                               ),
                             )

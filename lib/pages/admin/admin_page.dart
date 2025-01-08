@@ -10,7 +10,7 @@ class AdminScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> _logout(BuildContext context) async {
+    Future<void> logout(BuildContext context) async {
       final prefs = await SharedPreferences.getInstance();
       await prefs.clear();
       Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
@@ -20,6 +20,7 @@ class AdminScreen extends StatelessWidget {
         // floatingActionButton: FloatingActionButton(onPressed: () {}),
         backgroundColor: AppColors.backgroundColor,
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
             'Admin paneli',
             style: AppStyle.fontStyle
@@ -44,7 +45,7 @@ class AdminScreen extends StatelessWidget {
               width: 20,
             ),
             IconButton(
-              onPressed: () => _logout(context),
+              onPressed: () => logout(context),
               icon: const Icon(
                 Icons.logout,
                 color: Colors.white,
