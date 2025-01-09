@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nazorat_varaqasi/pages/admin/admin_page.dart';
+import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/admin_page.dart';
 import 'package:nazorat_varaqasi/pages/user/user_screen.dart';
 import 'package:postgres/postgres.dart';
 import 'package:shared_preferences/shared_preferences.dart';
