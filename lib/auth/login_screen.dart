@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nazorat_varaqasi/style/app_colors.dart';
+import 'package:nazorat_varaqasi/style/app_style.dart';
 import 'package:postgres/postgres.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,14 +23,12 @@ class _LoginScreenState extends State<LoginScreen> {
     _checkAutoLogin();
   }
 
-  /// Проверка и выполнение автологина
   Future<void> _checkAutoLogin() async {
     final prefs = await SharedPreferences.getInstance();
     final savedUsername = prefs.getString('username');
     final savedPassword = prefs.getString('password');
 
     if (savedUsername != null && savedPassword != null) {
-      // Попытка автологина
       _autoLogin(savedUsername, savedPassword);
     }
   }
@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
         await prefs.setString('password', password);
 
         print('Автологин успешен: ID пользователя - $userId');
-        Navigator.pushNamed(context, '/home'); // Переход на следующий экран
+        Navigator.pushNamed(context, '/home');
       } else {
         print('Неверные данные при автологине.');
       }
@@ -78,14 +78,12 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  /// Переключение видимости пароля
   void togglePasswordView() {
     setState(() {
       isHiddenPassword = !isHiddenPassword;
     });
   }
 
-  /// Метод входа
   Future<void> login() async {
     final isValid = formKey.currentState!.validate();
     if (!isValid) return;
@@ -118,7 +116,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
         print('Логин успешен! ID пользователя: $userId');
 
-        // Сохранение данных в SharedPreferences
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('userId', userId);
         await prefs.setString('username', username);
@@ -131,7 +128,6 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
 
-        // Переход на следующий экран
         Navigator.pushNamed(context, '/home');
       } else {
         print('Неверные учётные данные.');
@@ -158,7 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF1F1F1F),
+      backgroundColor: AppColors.backgroundColor,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 100),
@@ -166,7 +162,6 @@ class _LoginScreenState extends State<LoginScreen> {
             key: formKey,
             child: Column(
               children: [
-                // Логотип
                 Center(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
@@ -178,28 +173,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-
-                // Заголовок
                 Center(
-                  child: Text(
-                    'Xush kelibsiz!',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child: Text('Xush kelibsiz!',
+                      style: AppStyle.fontStyle
+                          .copyWith(fontSize: 28, fontWeight: FontWeight.bold)),
                 ),
                 const SizedBox(height: 10),
-
                 Center(
-                  child: Text(
-                    'Tizimga kirishingiz mumkin',
-                    style: TextStyle(color: Colors.grey[500], fontSize: 16),
-                  ),
+                  child: Text('Tizimga kirishingiz mumkin',
+                      style: AppStyle.fontStyle),
                 ),
                 const SizedBox(height: 30),
-
                 SizedBox(
                   width: 400,
                   height: 400,
@@ -207,12 +191,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       TextFormField(
                         controller: emailController,
-                        style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
+                          hoverColor: AppColors.hoverColor,
                           filled: true,
-                          fillColor: Colors.grey[800],
-                          hintText: 'Имя пользователя',
-                          hintStyle: TextStyle(color: Colors.grey[400]),
+                          fillColor: AppColors.foregroundColor,
+                          hintText: 'Login',
+                          hintStyle: AppStyle.fontStyle,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
                             borderSide: BorderSide.none,
@@ -220,23 +204,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Введите имя пользователя';
+                            return 'Loginni kiriting';
                           }
                           return null;
                         },
                       ),
                       const SizedBox(height: 20),
-
-                      // Поле для пароля
                       TextFormField(
                         controller: passwordController,
                         obscureText: isHiddenPassword,
-                        style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
+                          hoverColor: AppColors.hoverColor,
                           filled: true,
-                          fillColor: Colors.grey[800],
-                          hintText: 'Пароль',
-                          hintStyle: TextStyle(color: Colors.grey[400]),
+                          fillColor: AppColors.foregroundColor,
+                          hintText: 'Parol',
+                          hintStyle: AppStyle.fontStyle,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(15),
                             borderSide: BorderSide.none,
@@ -246,32 +228,30 @@ class _LoginScreenState extends State<LoginScreen> {
                               isHiddenPassword
                                   ? Icons.visibility_off
                                   : Icons.visibility,
-                              color: Colors.white,
+                              color: AppColors.iconColor,
                             ),
                             onPressed: togglePasswordView,
                           ),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Введите пароль';
+                            return 'Parolni kiriting';
                           }
                           return null;
                         },
                       ),
                       const SizedBox(height: 20),
-
-                      // Кнопка входа
                       ElevatedButton(
                         onPressed: login,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF4CAF50),
+                          backgroundColor: AppColors.iconColor,
                           minimumSize: const Size(double.infinity, 50),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
                         child: const Text(
-                          'Войти',
+                          'Kirish',
                           style: TextStyle(color: Colors.white),
                         ),
                       ),

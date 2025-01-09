@@ -54,6 +54,7 @@ dependencies:
   flutter_localization: ^0.3.1
   responsive_grid_list: ^1.4.0
   simple_grid: ^0.1.5
+  flutter_svg: ^2.0.17
 dev_dependencies:
   flutter_test:
     sdk: flutter

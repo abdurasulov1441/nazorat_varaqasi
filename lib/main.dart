@@ -9,15 +9,14 @@ Future<void> main() async {
 
   runApp(const MyApp());
 
-  // Устанавливаем минимальный и максимальный размер окна
   doWhenWindowReady(() {
-    const initialSize = Size(1366, 768); // Фиксированный размер окна
-    appWindow.minSize = initialSize; // Устанавливаем минимальный размер окна
-    appWindow.maxSize = initialSize; // Устанавливаем максимальный размер окна
-    appWindow.size = initialSize; // Устанавливаем стартовый размер окна
-    appWindow.alignment = Alignment.center; // Центрируем окно
-    appWindow.title = "Nazorat varaqasi"; // Название окна
-    appWindow.show(); // Показываем окно
+    const initialSize = Size(1366, 768);
+    appWindow.minSize = initialSize;
+    appWindow.maxSize = initialSize;
+    appWindow.size = initialSize;
+    appWindow.alignment = Alignment.center;
+    appWindow.title = "Nazorat varaqasi";
+    appWindow.show();
   });
 }
 
@@ -39,11 +38,10 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        Locale('uz'), 
-        Locale('en'), 
+        Locale('uz'),
+        Locale('en'),
       ],
-      locale:
-          const Locale('uz'), 
+      locale: const Locale('uz'),
       routes: {
         '/': (context) => const LoginScreen(),
         '/home': (context) => const HomeScreen(),
