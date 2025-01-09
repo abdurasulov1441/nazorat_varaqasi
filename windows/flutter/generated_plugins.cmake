@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   bitsdojo_window_windows
+  flutter_localization
   screen_retriever_windows
   system_tray
   window_manager

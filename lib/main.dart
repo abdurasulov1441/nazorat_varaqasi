@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:nazorat_varaqasi/auth/home_screen.dart';
 import 'package:nazorat_varaqasi/auth/login_screen.dart';
 
@@ -32,6 +33,17 @@ class MyApp extends StatelessWidget {
           TargetPlatform.android: CupertinoPageTransitionsBuilder(),
         }),
       ),
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('uz'), 
+        Locale('en'), 
+      ],
+      locale:
+          const Locale('uz'), 
       routes: {
         '/': (context) => const LoginScreen(),
         '/home': (context) => const HomeScreen(),
