@@ -16,16 +16,21 @@ class AdminMenuButton extends StatelessWidget {
               padding: EdgeInsets.only(left: 5),
               backgroundColor: AppColors.foregroundColor,
               shape: RoundedRectangleBorder(
-                  side: BorderSide(color: AppColors.backgroundColor, width: 1),
+                  side: BorderSide(
+                      color: const Color.fromARGB(255, 228, 228, 228),
+                      width: 1),
                   borderRadius: BorderRadius.circular(5))),
           onPressed: () {},
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              SizedBox(
+                height: 35,
+              ),
               SvgPicture.asset(
                 'assets/images/$svgname.svg',
-                width: 16,
-                height: 16,
+                width: 22,
+                height: 22,
               ),
               SizedBox(
                 width: 10,

@@ -59,6 +59,7 @@ dependencies:
   flutter_expandable_table: ^2.1.0
   accordion: ^2.6.0
   one_clock: ^2.0.1
+  calendar_date_picker2: ^1.1.8
 dev_dependencies:
   flutter_test:
     sdk: flutter

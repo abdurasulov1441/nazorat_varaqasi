@@ -23,7 +23,7 @@ class AdminScreen extends StatelessWidget {
         backgroundColor: AppColors.backgroundColor,
         body: Container(
           width: double.infinity,
-          margin: EdgeInsets.all(20),
+          margin: EdgeInsets.all(10),
           child: Column(
             children: [
               MyCustomAppBar(),

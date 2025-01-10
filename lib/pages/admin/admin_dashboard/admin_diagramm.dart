@@ -11,9 +11,9 @@ class AdminDiagramm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         width: 515,
-        height: 200,
+        height: 250,
         padding: EdgeInsets.all(15),
-        margin: EdgeInsets.only(top: 20, left: 15),
+        margin: EdgeInsets.only(top: 10, left: 15),
         decoration: BoxDecoration(
             color: AppColors.foregroundColor,
             borderRadius: BorderRadius.circular(10)),
@@ -21,7 +21,7 @@ class AdminDiagramm extends StatelessWidget {
           children: [
             SizedBox(
               width: double.infinity,
-              height: 140,
+              height: 190,
               child: ListView.builder(
                 itemCount: 8,
                 itemBuilder: (BuildContext context, int index) {
@@ -82,6 +82,7 @@ class Admindiagramelements extends StatelessWidget {
               values: stats,
               height: 22,
               borderRadius: 10,
+              colorBlend: false,
               totalPercentage: totalcards,
               unitLabel: '',
             ),

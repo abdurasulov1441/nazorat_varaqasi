@@ -12,15 +12,29 @@ class AdminMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(5),
-      margin: EdgeInsets.only(top: 20),
+      margin: EdgeInsets.only(top: 10),
       width: 249,
-      height: 600,
+      height: 630,
       decoration: BoxDecoration(
           color: AppColors.foregroundColor,
           borderRadius: BorderRadius.circular(10)),
       child: Column(
         children: [
+          SizedBox(
+            height: 10,
+          ),
+          AdminMenuButton(
+            name: 'Dashboard',
+            svgname: 'dashboard',
+          ),
           EmployeeAccordionPage(),
+          SizedBox(
+            height: 5,
+          ),
+          AdminMenuButton(
+            name: 'Foydalanuvchilar',
+            svgname: 'users',
+          ),
           Spacer(),
           AdminMenuButton(
             name: 'Chiqish',
@@ -45,7 +59,7 @@ class EmployeeAccordionPage extends StatelessWidget {
     return Accordion(
       initialOpeningSequenceDelay: 1,
       maxOpenSections: 1,
-      //headerBorderRadius: 5,
+      headerBorderRadius: 5,
       headerBackgroundColor: Colors.white,
       // headerBackgroundColorOpened: Colors.red[900],
       headerBorderColor: Colors.grey[300],

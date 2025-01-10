@@ -12,7 +12,7 @@ class AdminStatistic extends StatelessWidget {
       width: 1046,
       height: 100,
       padding: EdgeInsets.all(5),
-      margin: EdgeInsets.only(top: 20, left: 15),
+      margin: EdgeInsets.only(top: 10, left: 15),
       decoration: BoxDecoration(
           color: AppColors.foregroundColor,
           borderRadius: BorderRadius.circular(10)),
