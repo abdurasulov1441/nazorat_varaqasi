@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/admin_calendar.dart';
 import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/admin_diagramm.dart';
 import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/admin_menu.dart';
+import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/admin_search.dart';
 import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/admin_statistic.dart';
 import 'package:nazorat_varaqasi/services/app_bar.dart';
 
@@ -40,16 +41,7 @@ class AdminScreen extends StatelessWidget {
                           Row(
                             children: [AdminDiagramm(), AdminCalendar()],
                           ),
-                          Container(
-                            width: 1046,
-                            height: 260,
-                            padding: EdgeInsets.all(15),
-                            margin: EdgeInsets.only(top: 20, left: 15),
-                            decoration: BoxDecoration(
-                                color: AppColors.foregroundColor,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Text('data'),
-                          )
+                          AdminSearch()
                         ],
                       )
                     ],

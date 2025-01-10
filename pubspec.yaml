@@ -55,6 +55,10 @@ dependencies:
   responsive_grid_list: ^1.4.0
   simple_grid: ^0.1.5
   flutter_svg: ^2.0.17
+  progress_bar_chart: ^0.0.12
+  flutter_expandable_table: ^2.1.0
+  accordion: ^2.6.0
+  one_clock: ^2.0.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

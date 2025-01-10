@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nazorat_varaqasi/style/app_colors.dart';
 import 'package:nazorat_varaqasi/style/app_style.dart';
+import 'package:one_clock/one_clock.dart';
 
 class MyCustomAppBar extends StatelessWidget {
   const MyCustomAppBar({super.key});
@@ -36,6 +37,23 @@ class MyCustomAppBar extends StatelessWidget {
                     fontSize: 20,
                     color: AppColors.iconColor),
               ),
+            ],
+          ),
+          Row(
+            children: [
+              Text(
+                'Hozirgi vaqt:',
+                style: AppStyle.fontStyle.copyWith(fontWeight: FontWeight.bold),
+              ),
+              DigitalClock(
+                  format: "Hms",
+                  showSeconds: true,
+                  isLive: true,
+                  digitalClockTextColor: Colors.black,
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.rectangle,
+                      borderRadius: BorderRadius.all(Radius.circular(15))),
+                  datetime: DateTime.now()),
             ],
           ),
           Row(
