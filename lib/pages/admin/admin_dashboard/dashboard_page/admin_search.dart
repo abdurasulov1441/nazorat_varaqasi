@@ -1,4 +1,3 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:nazorat_varaqasi/style/app_colors.dart';
@@ -9,7 +8,6 @@ class AdminSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
     return Container(
       width: 1046,
       height: 260,
