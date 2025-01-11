@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:nazorat_varaqasi/auth/home_screen.dart';
-import 'package:nazorat_varaqasi/auth/login_screen.dart';
 import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/admin_page.dart';
-import 'package:nazorat_varaqasi/pages/admin/calendar_page/calendar_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
