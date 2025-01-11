@@ -32,10 +32,8 @@ class MyCustomAppBar extends StatelessWidget {
               ),
               Text(
                 'Nazorat varaqalar monitoringi',
-                style: AppStyle.fontStyle.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: AppColors.iconColor),
+                style: AppStyle.fontStyle
+                    .copyWith(fontSize: 26, color: AppColors.iconColor),
               ),
             ],
           ),
@@ -67,13 +65,19 @@ class MyCustomAppBar extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: 20,
+                width: 10,
               ),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Abdulaziz'),
-                  Text('Abdurasulov'),
+                  Text(
+                    'Abdulaziz',
+                    style: AppStyle.fontStyle.copyWith(fontSize: 10),
+                  ),
+                  Text(
+                    'Abdurasulov',
+                    style: AppStyle.fontStyle.copyWith(fontSize: 10),
+                  ),
                 ],
               ),
               SizedBox(

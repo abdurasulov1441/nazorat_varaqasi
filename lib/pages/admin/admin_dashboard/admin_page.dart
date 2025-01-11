@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/admin_calendar.dart';
-import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/admin_diagramm.dart';
-import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/admin_menu.dart';
-import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/admin_search.dart';
-import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/admin_statistic.dart';
+import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/dashboard_page/admin_calendar.dart';
+import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/dashboard_page/admin_diagramm.dart';
+import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/dashboard_page/admin_menu.dart';
+import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/dashboard_page/admin_search.dart';
+import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/dashboard_page/admin_statistic.dart';
 import 'package:nazorat_varaqasi/services/app_bar.dart';
 
 import 'package:nazorat_varaqasi/style/app_colors.dart';
@@ -13,12 +13,6 @@ class AdminScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Future<void> logout(BuildContext context) async {
-    //   final prefs = await SharedPreferences.getInstance();
-    //   await prefs.clear();
-    //   Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-    // }
-
     return Scaffold(
         backgroundColor: AppColors.backgroundColor,
         body: Container(
