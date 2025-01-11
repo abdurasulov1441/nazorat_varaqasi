@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       ],
       supportedLocales: const [
         Locale('uz'),
-        Locale('en'),
+       
       ],
       locale: const Locale('uz'),
       routes: {

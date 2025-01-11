@@ -19,7 +19,7 @@ class AddCardPage extends StatelessWidget {
             },
             icon: Icon(
               Icons.arrow_back,
-              color: AppColors.headerColor,
+              color: AppColors.foregroundColor,
             )),
         title: Text(
           'Nazorat varqasi qo\'shish',
@@ -238,7 +238,8 @@ class _AddCardFormState extends State<AddCardForm> {
                     controller: _cardNumberController,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: AppColors.headerColor)),
+                          borderSide:
+                              BorderSide(color: AppColors.foregroundColor)),
                       enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.grey),
                           borderRadius: BorderRadius.circular(10)),
@@ -254,9 +255,9 @@ class _AddCardFormState extends State<AddCardForm> {
                   ),
                   const SizedBox(height: 16),
                   ListTile(
-                    iconColor: AppColors.headerColor,
+                    iconColor: AppColors.foregroundColor,
                     shape: RoundedRectangleBorder(
-                        side: BorderSide(color: AppColors.headerColor),
+                        side: BorderSide(color: AppColors.foregroundColor),
                         borderRadius: BorderRadius.circular(10)),
                     title: const Text(
                       'Ijro boshlanish vaqti',
@@ -284,7 +285,7 @@ class _AddCardFormState extends State<AddCardForm> {
                               trailing: IconButton(
                                 icon: const Icon(
                                   Icons.delete,
-                                  color: AppColors.headerColor,
+                                  color: AppColors.foregroundColor,
                                 ),
                                 onPressed: () {
                                   setState(() {

@@ -298,7 +298,7 @@ class _AdminCalendarPageState extends State<AdminCalendarPage> {
                                     ),
                                     Icon(
                                       Icons.arrow_right_alt,
-                                      color: AppColors.headerColor,
+                                      color: AppColors.foregroundColor,
                                       size: 30,
                                     ),
                                     Column(

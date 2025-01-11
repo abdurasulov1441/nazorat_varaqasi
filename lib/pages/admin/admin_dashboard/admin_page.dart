@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/dashboard_page/admin_calendar.dart';
-import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/dashboard_page/admin_diagramm.dart';
-import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/dashboard_page/admin_menu.dart';
-import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/dashboard_page/admin_search.dart';
-import 'package:nazorat_varaqasi/pages/admin/admin_dashboard/dashboard_page/admin_statistic.dart';
+import 'package:nazorat_varaqasi/services/acepted_cars.dart';
 import 'package:nazorat_varaqasi/services/app_bar.dart';
-
 import 'package:nazorat_varaqasi/style/app_colors.dart';
+
+import 'dashboard_page/admin_menu.dart';
 
 class AdminScreen extends StatelessWidget {
   const AdminScreen({super.key});
@@ -29,15 +26,7 @@ class AdminScreen extends StatelessWidget {
                       Column(
                         children: [AdminMenu()],
                       ),
-                      Column(
-                        children: [
-                          AdminStatistic(),
-                          Row(
-                            children: [AdminDiagramm(), AdminCalendar()],
-                          ),
-                          AdminSearch()
-                        ],
-                      )
+                      AceptedCards()
                     ],
                   ),
                 ],

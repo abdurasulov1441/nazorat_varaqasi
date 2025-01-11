@@ -131,7 +131,7 @@ class ButtonForAcordion extends StatelessWidget {
             padding: EdgeInsets.only(left: 5),
             backgroundColor: AppColors.foregroundColor,
             shape: RoundedRectangleBorder(
-                side: BorderSide(color: AppColors.headerColor, width: 0),
+                side: BorderSide(color: AppColors.foregroundColor, width: 0),
                 borderRadius: BorderRadius.circular(5))),
         onPressed: () {},
         child: Row(
